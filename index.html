@@ -1,54 +1,306 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
+<title>Admin Control Panel</title>
 
 <style>
-*{box-sizing:border-box;font-family:system-ui}
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+ font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+
+:root{
+ --theme-a:#4f46e5;
+ --theme-b:#ec4899;
+ --theme-c:#22d3ee;
+ --danger:#ef4444;
+ --success:#22c55e;
+ --warning:#f59e0b;
+ --ink:#0f172a;
+ --muted:#64748b;
+ --card:rgba(255,255,255,.94);
+}
+
 body{
  margin:0;
  min-height:100vh;
- background:linear-gradient(180deg,#4f46e5,#6d6af5);
+ background:
+  radial-gradient(circle at 12% 15%,rgba(34,211,238,.26),transparent 30%),
+  radial-gradient(circle at 84% 22%,rgba(236,72,153,.28),transparent 28%),
+  linear-gradient(135deg,#050816,#111827 48%,#312e81);
  padding:18px;
+ color:var(--ink);
+ overflow-x:hidden;
+ position:relative;
 }
-.container{max-width:440px;margin:auto}
+
+body::before{
+ content:"";
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ background-image:
+  radial-gradient(#fff 1.2px,transparent 1.5px),
+  radial-gradient(#a5f3fc 1px,transparent 1.3px),
+  radial-gradient(#fbcfe8 1.3px,transparent 1.6px);
+ background-size:34px 34px,72px 72px,118px 118px;
+ opacity:.72;
+ animation:stars 28s linear infinite;
+ z-index:0;
+}
+
+@keyframes stars{
+ from{background-position:0 0,20px 30px,40px 10px}
+ to{background-position:180px 260px,120px 220px,240px 170px}
+}
+
+.container{
+ max-width:480px;
+ margin:auto;
+ position:relative;
+ z-index:1;
+ padding-bottom:30px;
+}
+
 .card{
- background:#fff;
+ background:var(--card);
+ backdrop-filter:blur(16px);
+ border:1px solid rgba(255,255,255,.52);
  border-radius:22px;
  padding:20px;
  margin-bottom:18px;
- box-shadow:0 15px 35px rgba(0,0,0,.25);
+ box-shadow:0 15px 38px rgba(0,0,0,.26);
 }
-h2{text-align:center;color:#4f46e5;margin:0 0 14px}
-input,textarea,button{
+
+.top-card{
+ background:
+  radial-gradient(circle at top left,rgba(79,70,229,.18),transparent 42%),
+  rgba(255,255,255,.95);
+}
+
+h2{
+ text-align:center;
+ color:var(--theme-a);
+ margin:0 0 14px;
+ font-size:1.55rem;
+}
+
+h3{
+ color:#334155;
+ margin:4px 0 10px;
+ font-size:1.06rem;
+}
+
+p.small{
+ color:var(--muted);
+ font-size:.86rem;
+ line-height:1.45;
+ margin-top:8px;
+}
+
+label{
+ display:block;
+ margin-top:12px;
+ color:#334155;
+ font-size:.84rem;
+ font-weight:800;
+}
+
+input,textarea,select,button{
  width:100%;
  padding:14px;
- margin-top:12px;
+ margin-top:9px;
  border-radius:16px;
- border:1.5px solid #ddd;
+ border:1.5px solid #dbe3ef;
  font-size:15px;
+ outline:none;
 }
+
+input:focus,textarea:focus,select:focus{
+ border-color:var(--theme-a);
+ box-shadow:0 0 0 4px rgba(79,70,229,.12);
+}
+
+textarea{
+ min-height:112px;
+ resize:vertical;
+ line-height:1.45;
+}
+
 button{
  border:none;
- font-weight:800;
+ font-weight:900;
  color:#fff;
- background:#4f46e5;
+ background:linear-gradient(90deg,var(--theme-a),var(--theme-b),var(--theme-a));
+ background-size:220% 100%;
  cursor:pointer;
+ transition:.25s ease;
+ animation:btnFlow 4s ease infinite;
+ box-shadow:0 10px 22px rgba(79,70,229,.24);
 }
-.logout{background:#ef4444}
-.verify{background:#22c55e}
-.reject{background:#ef4444}
-.toggle{background:#0ea5e9}
-.order{
+
+button:hover{
+ transform:translateY(-2px);
+ box-shadow:0 14px 28px rgba(79,70,229,.32);
+}
+
+button:active{
+ transform:scale(.98);
+}
+
+@keyframes btnFlow{
+ 0%,100%{background-position:0 50%}
+ 50%{background-position:100% 50%}
+}
+
+.logout{background:linear-gradient(90deg,#ef4444,#f97316)}
+.verify{background:linear-gradient(90deg,#22c55e,#14b8a6)}
+.reject{background:linear-gradient(90deg,#ef4444,#db2777)}
+.toggle{background:linear-gradient(90deg,#0ea5e9,#4f46e5)}
+.ghost{
  background:#f8fafc;
+ color:#334155;
+ border:1.5px solid #dbe3ef;
+ animation:none;
+ box-shadow:none;
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+
+.grid3{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.stat{
+ background:linear-gradient(135deg,#f8fafc,#eef2ff);
+ border:1px solid #e2e8f0;
+ border-radius:16px;
+ padding:13px 10px;
+ text-align:center;
+}
+
+.stat b{
+ display:block;
+ color:var(--theme-a);
+ font-size:1.25rem;
+}
+
+.stat span{
+ color:#64748b;
+ font-size:.76rem;
+ font-weight:800;
+}
+
+.order,.stockItem,.settingPreview{
+ background:#f8fafc;
+ border:1px solid #e2e8f0;
  border-radius:16px;
  padding:14px;
  margin-top:12px;
  font-size:14px;
+ line-height:1.5;
 }
-.stockItem{font-size:13px;padding:6px 0}
+
+.order b,.stockItem b{
+ color:#1e293b;
+}
+
+.pill{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ padding:5px 10px;
+ border-radius:999px;
+ font-size:.76rem;
+ font-weight:900;
+ background:#eef2ff;
+ color:var(--theme-a);
+ margin:3px 4px 3px 0;
+}
+
+.status-open{background:#dcfce7;color:#15803d}
+.status-closed{background:#fee2e2;color:#b91c1c}
+.status-pending{background:#fef3c7;color:#92400e}
+
+.divider{
+ height:1px;
+ background:#e2e8f0;
+ margin:18px 0;
+}
+
+.theme-swatches{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:8px;
+ margin-top:10px;
+}
+
+.swatch{
+ height:42px;
+ border-radius:14px;
+ border:3px solid transparent;
+ cursor:pointer;
+ transition:.25s ease;
+}
+
+.swatch.active{
+ border-color:#111827;
+ transform:scale(1.06);
+}
+
+.notice{
+ padding:12px;
+ border-radius:16px;
+ background:#fff7ed;
+ color:#9a3412;
+ border:1px solid #fed7aa;
+ font-size:.86rem;
+ font-weight:800;
+ line-height:1.45;
+ margin-top:12px;
+}
+
+.toast{
+ position:fixed;
+ left:50%;
+ bottom:22px;
+ transform:translateX(-50%) translateY(20px);
+ width:min(420px,calc(100% - 28px));
+ background:linear-gradient(135deg,var(--theme-a),var(--theme-b));
+ color:white;
+ padding:15px 18px;
+ border-radius:18px;
+ font-weight:900;
+ text-align:center;
+ opacity:0;
+ pointer-events:none;
+ transition:.3s ease;
+ z-index:9999;
+ box-shadow:0 18px 42px rgba(0,0,0,.35);
+}
+
+.toast.show{
+ opacity:1;
+ transform:translateX(-50%) translateY(0);
+}
+
+audio{display:none}
+
+@media(max-width:420px){
+ .grid2,.grid3{grid-template-columns:1fr}
+ .theme-swatches{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 
@@ -56,50 +308,104 @@ button{
 <div class="container">
 
 <!-- LOGIN -->
-<div class="card" id="loginCard">
-<h2>🔐 Admin Login</h2>
-<input id="email" placeholder="Admin Email">
-<input id="pass" type="password" placeholder="Password">
+<div class="card top-card" id="loginCard">
+<h2>Admin Login</h2>
+<input id="email" placeholder="Admin Email" autocomplete="username">
+<input id="pass" type="password" placeholder="Password" autocomplete="current-password">
 <button onclick="login()">Login</button>
+<p class="small">Secure admin access for managing shop settings, theme, product values, and pending orders.</p>
 </div>
 
 <!-- PANEL -->
-<div class="card" id="panel" style="display:none">
-<h2>⚙️ Admin Panel</h2>
+<div id="panel" style="display:none">
 
-<button class="toggle" onclick="toggleShop()" id="shopBtn">
-Loading shop status...
-</button>
-
-<input id="price" type="number" placeholder="Price per ID">
-<button onclick="savePrice()">Update Price</button>
-
-<hr>
-
-<textarea id="ids" rows="6" placeholder="username
-password
-phone
-email"></textarea>
-<button onclick="addIDs()">Add IDs</button>
-
-<hr>
-
-<h3>📦 Stock Status</h3>
-<div id="stockList"></div>
-<h3>Total Available: <span id="stock">0</span></h3>
-
-<hr>
-
-<h3>⏳ Pending Orders</h3>
-<div id="orders"></div>
-
+<div class="card top-card">
+<h2>Admin Control Panel</h2>
+<div class="grid3">
+ <div class="stat"><b id="stock">0</b><span>Available</span></div>
+ <div class="stat"><b id="pendingCount">0</b><span>Pending</span></div>
+ <div class="stat"><b id="priceStat">₹0</b><span>Price</span></div>
+</div>
+<button class="toggle" onclick="toggleShop()" id="shopBtn">Loading shop status...</button>
 <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+<h3>Store Pricing</h3>
+<label>Price per product value</label>
+<input id="price" type="number" placeholder="Price per item">
+<button onclick="savePrice()">Update Price</button>
+</div>
+
+<div class="card">
+<h3>User Side Controls</h3>
+<label>Support WhatsApp Number</label>
+<input id="supportNumber" placeholder="Example: 919999999999">
+
+<label>Replacement Policy Time</label>
+<input id="replacementTime" placeholder="Example: 11:05 AM">
+
+<label>Replacement Policy Text</label>
+<textarea id="replacementText" placeholder="Write replacement rules shown to users"></textarea>
+
+<label>Terms & Conditions</label>
+<textarea id="termsText" placeholder="Write terms shown before buying"></textarea>
+
+<label>Store Announcement</label>
+<textarea id="announcement" placeholder="Short user-side announcement"></textarea>
+
+<button onclick="saveUserControls()">Save User Controls</button>
+
+<div class="settingPreview" id="settingsPreview">Loading current controls...</div>
+</div>
+
+<div class="card">
+<h3>Theme & Animation Controls</h3>
+<div class="grid2">
+ <button class="ghost" onclick="toggleAutoTheme()" id="autoThemeBtn">Auto Color: Loading</button>
+ <button class="ghost" onclick="toggleUltraGlow()" id="glowBtn">Ultra Glow: Loading</button>
+ <button class="ghost" onclick="toggleFastStars()" id="starsBtn">Stars: Loading</button>
+ <button class="ghost" onclick="toggleRequireTerms()" id="termsBtn">Terms Required: Loading</button>
+</div>
+
+<label>Choose active theme</label>
+<div class="theme-swatches" id="themeSwatches"></div>
+<button onclick="saveThemeSettings()">Save Theme Settings</button>
+</div>
+
+<div class="card">
+<h3>Add Product Value / Voucher</h3>
+<textarea id="codes" rows="7" placeholder="Enter full product value here
+Example:
+Line 1
+Line 2
+Line 3
+
+All lines together will become 1 stock item."></textarea>
+<button onclick="addCodes()">Add Stock</button>
+<p class="small">Is box me jitni bhi lines likhoge, Add Stock par sab milkar sirf 1 stock item banega. User buy karega to yahi same-to-same multiline value deliver hogi.</p>
+</div>
+
+<div class="card">
+<h3>Stock Status</h3>
+<div id="stockList"></div>
+</div>
+
+<div class="card">
+<h3>Pending Orders</h3>
+<div class="notice">Verify only after matching payment/UTR. Verify karte hi stock ka poora saved product block same-to-same deliveries/orderId me save hoga, phir stock se remove hoga.</div>
+<div id="orders"></div>
+</div>
+
 <audio id="alertAudio" src="beep.mp3" loop></audio>
 </div>
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { getDatabase, ref, set, push, onValue, update, get, remove }
 from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 
@@ -107,113 +413,345 @@ const app = initializeApp({
  apiKey: "AIzaSyDe1zzvmBSKaX6cVUQemWX20atYCIiageA",
  databaseURL: "https://tamp-dcd36-default-rtdb.firebaseio.com",
 });
+
 const auth=getAuth(app);
 const db=getDatabase(app);
 
-let audioAllowed=false,isBeeping=false;
+const themes=[
+ {name:"Nebula",a:"#4f46e5",b:"#ec4899",c:"#22d3ee"},
+ {name:"Aurora",a:"#10b981",b:"#06b6d4",c:"#a78bfa"},
+ {name:"Galaxy",a:"#8b5cf6",b:"#f43f5e",c:"#38bdf8"},
+ {name:"Solar",a:"#f97316",b:"#ef4444",c:"#facc15"},
+ {name:"Cyber",a:"#06b6d4",b:"#6366f1",c:"#84cc16"},
+ {name:"Royal",a:"#7c3aed",b:"#db2777",c:"#0ea5e9"}
+];
+
+let audioAllowed=false;
+let isBeeping=false;
+let settings={
+ shopOpen:true,
+ pricePerId:50,
+ supportNumber:"",
+ replacementTime:"11:05 AM",
+ replacementText:"",
+ termsText:"",
+ announcement:"",
+ autoTheme:true,
+ ultraGlow:true,
+ fastStars:false,
+ requireTerms:true,
+ themeIndex:0
+};
+
+const $=id=>document.getElementById(id);
+
+function toast(msg){
+ $("toast").textContent=msg;
+ $("toast").classList.add("show");
+ setTimeout(()=>$("toast").classList.remove("show"),2400);
+}
+
+function applyLocalTheme(){
+ const t=themes[settings.themeIndex] || themes[0];
+ document.documentElement.style.setProperty("--theme-a",t.a);
+ document.documentElement.style.setProperty("--theme-b",t.b);
+ document.documentElement.style.setProperty("--theme-c",t.c);
+}
+
+function renderThemeSwatches(){
+ $("themeSwatches").innerHTML="";
+ themes.forEach((t,i)=>{
+  const div=document.createElement("div");
+  div.className="swatch"+(i===settings.themeIndex?" active":"");
+  div.title=t.name;
+  div.style.background=`linear-gradient(135deg,${t.a},${t.b},${t.c})`;
+  div.onclick=()=>{
+   settings.themeIndex=i;
+   applyLocalTheme();
+   renderThemeSwatches();
+   toast(t.name+" theme selected");
+  };
+  $("themeSwatches").appendChild(div);
+ });
+}
+
+function renderControls(){
+ $("autoThemeBtn").textContent="Auto Color: "+(settings.autoTheme?"ON":"OFF");
+ $("glowBtn").textContent="Ultra Glow: "+(settings.ultraGlow?"ON":"OFF");
+ $("starsBtn").textContent="Stars: "+(settings.fastStars?"FAST":"NORMAL");
+ $("termsBtn").textContent="Terms Required: "+(settings.requireTerms?"YES":"NO");
+ $("priceStat").textContent="₹"+(settings.pricePerId || 0);
+ $("price").value=settings.pricePerId || "";
+ $("supportNumber").value=settings.supportNumber || "";
+ $("replacementTime").value=settings.replacementTime || "";
+ $("replacementText").value=settings.replacementText || "";
+ $("termsText").value=settings.termsText || "";
+ $("announcement").value=settings.announcement || "";
+ $("settingsPreview").innerHTML=`
+  <b>Current User Controls</b><br>
+  <span class="pill">Support: ${settings.supportNumber || "Not set"}</span>
+  <span class="pill">Policy: ${settings.replacementTime || "Not set"}</span>
+  <span class="pill">Theme: ${(themes[settings.themeIndex] || themes[0]).name}</span>
+  <span class="pill">${settings.autoTheme ? "Auto Color ON" : "Auto Color OFF"}</span>
+  <span class="pill">${settings.requireTerms ? "Terms Required" : "Terms Optional"}</span>
+ `;
+ applyLocalTheme();
+ renderThemeSwatches();
+}
+
+function productValue(item){
+ return item.value || item.code || item.product || "";
+}
+
+function orderQty(order){
+ const raw=order.qty ?? order.quantity ?? order.count ?? 1;
+ const parsed=parseInt(String(raw).replace(/[^\d]/g,""),10);
+ return parsed > 0 ? parsed : 1;
+}
 
 /* LOGIN */
 window.login=()=>{
- signInWithEmailAndPassword(auth,email.value.trim(),pass.value)
+ signInWithEmailAndPassword(auth,$("email").value.trim(),$("pass").value)
  .then(()=>{
-  loginCard.style.display="none";
-  panel.style.display="block";
-  alertAudio.play().then(()=>{alertAudio.pause();audioAllowed=true}).catch(()=>{});
+  $("loginCard").style.display="none";
+  $("panel").style.display="block";
+  $("alertAudio").play().then(()=>{
+   $("alertAudio").pause();
+   audioAllowed=true;
+  }).catch(()=>{});
+  toast("Logged in");
  })
  .catch(e=>alert(e.message));
 };
 
 window.logout=()=>signOut(auth).then(()=>{
- panel.style.display="none";
- loginCard.style.display="block";
+ $("panel").style.display="none";
+ $("loginCard").style.display="block";
+ toast("Logged out");
 });
 
-/* SHOP OPEN / CLOSE */
-onValue(ref(db,"settings/shopOpen"),s=>{
- const open=s.val();
- shopBtn.innerText=open?"🟢 SHOP OPEN":"🔴 SHOP CLOSED";
- shopBtn.style.background=open?"#22c55e":"#ef4444";
+onAuthStateChanged(auth,user=>{
+ if(user){
+  $("loginCard").style.display="none";
+  $("panel").style.display="block";
+ }else{
+  $("panel").style.display="none";
+  $("loginCard").style.display="block";
+ }
+});
+
+/* SETTINGS LISTENER */
+onValue(ref(db,"settings"),snap=>{
+ settings={...settings,...(snap.val() || {})};
+ renderControls();
+ const open=settings.shopOpen !== false;
+ $("shopBtn").innerText=open?"SHOP OPEN":"SHOP CLOSED";
+ $("shopBtn").style.background=open?"linear-gradient(90deg,#22c55e,#14b8a6)":"linear-gradient(90deg,#ef4444,#db2777)";
 });
 
 window.toggleShop=async()=>{
- const s=await get(ref(db,"settings/shopOpen"));
- await set(ref(db,"settings/shopOpen"),!s.val());
+ await set(ref(db,"settings/shopOpen"),!(settings.shopOpen !== false));
+ toast("Shop status updated");
 };
 
-/* PRICE */
-window.savePrice=()=>set(ref(db,"settings/pricePerId"),Number(price.value));
+window.savePrice=async()=>{
+ const val=Number($("price").value);
+ if(!val || val<1) return alert("Enter valid price");
+ await set(ref(db,"settings/pricePerId"),val);
+ toast("Price updated");
+};
 
-/* ADD STOCK */
-window.addIDs=()=>{
- const l=ids.value.trim().split("\n");
- if(l.length%4!==0) return alert("Invalid format");
- for(let i=0;i<l.length;i+=4){
-  push(ref(db,"stock"),{
-   username:l[i],
-   password:l[i+1],
-   phone:l[i+2],
-   email:l[i+3],
-   addedAt:Date.now()
-  });
- }
- ids.value="";
+window.saveUserControls=async()=>{
+ await update(ref(db,"settings"),{
+  supportNumber:$("supportNumber").value.trim(),
+  whatsappNumber:$("supportNumber").value.trim(),
+  replacementTime:$("replacementTime").value.trim(),
+  replacementText:$("replacementText").value.trim(),
+  termsText:$("termsText").value.trim(),
+  announcement:$("announcement").value.trim()
+ });
+ toast("User-side controls saved");
+};
+
+window.toggleAutoTheme=()=>{
+ settings.autoTheme=!settings.autoTheme;
+ renderControls();
+};
+
+window.toggleUltraGlow=()=>{
+ settings.ultraGlow=!settings.ultraGlow;
+ renderControls();
+};
+
+window.toggleFastStars=()=>{
+ settings.fastStars=!settings.fastStars;
+ renderControls();
+};
+
+window.toggleRequireTerms=()=>{
+ settings.requireTerms=!settings.requireTerms;
+ renderControls();
+};
+
+window.saveThemeSettings=async()=>{
+ await update(ref(db,"settings"),{
+  autoTheme:settings.autoTheme,
+  ultraGlow:settings.ultraGlow,
+  fastStars:settings.fastStars,
+  requireTerms:settings.requireTerms,
+  themeIndex:settings.themeIndex,
+  theme:themes[settings.themeIndex] || themes[0]
+ });
+ toast("Theme settings saved");
+};
+
+/* ADD LEGAL DIGITAL STOCK */
+window.addCodes=async()=>{
+ const value=$("codes").value.trim();
+ if(!value) return alert("Enter product value");
+ await push(ref(db,"stock"),{
+  value,
+  code:value,
+  type:"digital_product_block",
+  sold:false,
+  addedAt:Date.now()
+ });
+ $("codes").value="";
+ toast("1 stock item added");
 };
 
 /* STOCK VIEW */
 onValue(ref(db,"stock"),snap=>{
- stockList.innerHTML="";
- let c=0,i=1;
+ $("stockList").innerHTML="";
+ let c=0;
+ let i=1;
  snap.forEach(s=>{
+  const v=s.val() || {};
+  if(v.sold) return;
   c++;
-  stockList.innerHTML+=`<div class="stockItem">ID #${i++} ✅</div>`;
+  const exactValue=productValue(v) || "PRODUCT";
+  const firstLine=exactValue.split("\n")[0] || exactValue;
+  const lineCount=exactValue.split("\n").filter(Boolean).length;
+  const masked=firstLine.length>18 ? firstLine.slice(0,18)+"..." : firstLine;
+  $("stockList").innerHTML+=`
+   <div class="stockItem">
+    <b>#${i++}</b> ${masked}<br>
+    <span class="pill">${lineCount} line block</span>
+    <button class="reject" onclick="deleteStock('${s.key}')">Delete</button>
+   </div>`;
  });
- stock.innerText=c;
+ $("stock").innerText=c;
+ if(c===0){
+  $("stockList").innerHTML=`<div class="stockItem">No stock available</div>`;
+ }
 });
+
+window.deleteStock=async(key)=>{
+ if(!confirm("Delete this stock item?")) return;
+ await remove(ref(db,"stock/"+key));
+ toast("Stock deleted");
+};
 
 /* ORDERS */
 onValue(ref(db,"orders"),snap=>{
- orders.innerHTML="";
- let p=0;
+ $("orders").innerHTML="";
+ let pending=0;
  snap.forEach(o=>{
-  const v=o.val();
+  const v=o.val() || {};
   if(v.status==="pending"){
-   p++;
-   orders.innerHTML+=`
+   pending++;
+   $("orders").innerHTML+=`
     <div class="order">
-     <b>Order:</b> ${o.key}
-     <b>Qty:</b> ${v.qty}
-     <b>UTR:</b> ${v.utr}
-     <button class="verify" onclick="verify('${o.key}',${v.qty})">Verify</button>
-     <button class="reject" onclick="reject('${o.key}')">Reject</button>
+     <span class="pill status-pending">Pending</span><br>
+     <b>Order:</b> ${o.key}<br>
+     <b>Qty:</b> ${orderQty(v)}<br>
+     <b>Amount:</b> ₹${v.amount || 0}<br>
+     <b>UTR:</b> ${v.utr || "Not entered"}<br>
+     <button class="verify" onclick="verify('${o.key}')">Verify Payment</button>
+     <button class="reject" onclick="reject('${o.key}')">Reject Payment</button>
     </div>`;
   }
  });
- if(p>0 && audioAllowed && !isBeeping){alertAudio.play();isBeeping=true}
- if(p===0 && isBeeping){alertAudio.pause();isBeeping=false}
+ $("pendingCount").innerText=pending;
+ if(pending===0){
+  $("orders").innerHTML=`<div class="order">No pending orders</div>`;
+ }
+ if(pending>0 && audioAllowed && !isBeeping){
+  $("alertAudio").play();
+  isBeeping=true;
+ }
+ if(pending===0 && isBeeping){
+  $("alertAudio").pause();
+  isBeeping=false;
+ }
 });
 
-/* VERIFY – FIFO + DELETE FROM DB */
-window.verify=async(id,qty)=>{
- const orderRef=ref(db,"orders/"+id);
- await update(orderRef,{status:"processing"});
- const snap=await get(ref(db,"stock"));
- let picked=[];
- snap.forEach(s=>{
-  if(picked.length<qty) picked.push({k:s.key,...s.val()});
+/* VERIFY: FIFO delivery with exact product values */
+window.verify=async(id)=>{
+ const orderSnap=await get(ref(db,"orders/"+id));
+ if(!orderSnap.exists()) return alert("Order not found");
+ const order=orderSnap.val() || {};
+ const qty=orderQty(order);
+
+ await update(ref(db,"orders/"+id),{
+  status:"processing",
+  processingAt:Date.now()
  });
- if(picked.length<qty) return alert("No stock");
- for(const it of picked){
-  await remove(ref(db,"stock/"+it.k)); // 🔥 DELETE SOLD ID
-  await push(ref(db,"deliveries/"+id),it);
+
+ const stockSnap=await get(ref(db,"stock"));
+ const picked=[];
+ stockSnap.forEach(s=>{
+  const item=s.val() || {};
+  if(!item.sold && picked.length<qty){
+   picked.push({
+    key:s.key,
+    value:productValue(item),
+    raw:item
+   });
+  }
+ });
+
+ if(picked.length<qty){
+  await update(ref(db,"orders/"+id),{
+   status:"pending",
+   stockError:true,
+   stockErrorAt:Date.now()
+  });
+  return alert("Not enough stock. Required: "+qty+", Available: "+picked.length);
  }
- await update(orderRef,{status:"verified"});
- alert("Delivered");
+
+ const deliveredValues=[];
+ for(const item of picked){
+  deliveredValues.push(item.value);
+  await push(ref(db,"deliveries/"+id),{
+   value:item.value,
+   code:item.value,
+   type:"digital_product_block",
+   deliveredAt:Date.now()
+  });
+  await remove(ref(db,"stock/"+item.key));
+ }
+
+ await update(ref(db,"orders/"+id),{
+  status:"verified",
+  verifiedAt:Date.now(),
+  deliveredQty:deliveredValues.length,
+  deliveredText:deliveredValues.join("\n")
+ });
+ toast("Payment verified and "+deliveredValues.length+" values delivered");
 };
 
 /* REJECT */
 window.reject=async(id)=>{
- await remove(ref(db,"orders/"+id));
- await set(ref(db,"rejected/"+id),{msg:"YOUR PAYMENT NOT MATCH"});
+ await update(ref(db,"orders/"+id),{
+  status:"rejected",
+  rejectedAt:Date.now()
+ });
+ await set(ref(db,"rejected/"+id),{
+  msg:"Payment not matched",
+  time:Date.now()
+ });
+ toast("Payment rejected");
 };
 </script>
 </body>
